@@ -1,0 +1,165 @@
+<!-- Part 2: Registration Section -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price predictor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header class="center-header">
+    <h1>Welcome to Almaty price predictor</h1>
+    <img src="Almaty_background.jpeg" alt="Welcome Image" style="max-width: 100%;">
+</header>
+
+<section>
+    <div class="property-details">
+        <h2>Property Details</h2>
+        <form id="propertyForm">
+
+            <div class="left-half">
+                <!-- Number of rooms (accepts only numbers) -->
+                <div>
+                    <label for="number_of_rooms">Number of Rooms:</label>
+                    <input type="number" name="number_of_rooms" id="number_of_rooms" required>
+                </div>
+
+                <!-- District (choose one from 9 options as toggle list) -->
+               <div class="form-group">
+                    <label for="district">District:</label>
+                    <select name="district" id="district" required>
+                        <option value="Ауэзовский р-н">Ауэзовский р-н</option>
+                        <option value="Жетысуский р-н">Жетысуский р-н</option>
+                        <option value="Бостандыкский р-н">Бостандыкский р-н</option>
+                        <option value="Наурызбайский р-н">Наурызбайский р-н</option>
+                        <option value="Алатауский р-н">Алатауский р-н</option>
+                        <option value="Медеуский р-н">Медеуский р-н</option>
+                        <option value="Алмалинский р-н">Алмалинский р-н</option>
+                        <option value="Турксибский р-н">Турксибский р-н</option>
+                    </select>
+                </div>
+
+
+                <!-- Structure type (select only one from 3 options) -->
+                <div>
+                    <label for="structure_type">Structure Type:</label>
+                    <select name="structure_type" id="structure_type" required>
+                        <option value="кирпичный">кирпичный</option>
+                        <option value="монолитный">монолитный</option>
+                        <option value="панельный">панельный</option>
+                        <option value="иное">иное</option>
+                    </select>
+                </div>
+
+
+                <!-- Residential complex (text) -->
+                <div>
+                    <label for="residential_complex">Residential Complex:</label>
+                    <input type="text" name="residential_complex" id="residential_complex" required>
+                </div>
+
+
+                <!-- Year of construction (only numbers between 1900 - 2025) -->
+                <div>
+                     <label for="year_of_construction">Year of Construction:</label>
+                     <input type="number" name ="year_of_construction" id="year_of_construction" min="1900" max="2025" required>
+                </div>
+
+            </div>
+            <!-- Floor (only numbers) -->
+            <div class="right-half">
+                <div>
+                    <label for="floor">Floor:</label>
+                    <input type="number" name="floor" id="floor" required>
+                </div>
+
+                <!-- Area (only numbers) -->
+                <div>
+                    <label for="area">Area (in square meters):</label>
+                    <input type="number" name="area" id="area" required>
+                </div>
+
+                <!-- Quality (select only one option out of 5) -->
+
+                <div class="form-group">
+                    <label for="quality">Quality:</label>
+                    <select name="quality" id="quality" required>
+                        <option value="хорошее">Хорошее</option>
+                        <option value="черновая отделка">Черновая отделка</option>
+                        <option value="среднее">Среднее</option>
+                        <option value="требует ремонта">Требует ремонта</option>
+                        <option value="свободная планировка">Свободная планировка</option>
+                    </select>
+                </div>
+
+
+                <!-- Bathroom (select only one option out of 3) -->
+                <div class="form-group">
+                    <label for="bathroom">Bathroom:</label>
+                    <select name="bathroom" id="bathroom" required>
+                        <option value="совмещенный">Совмещенный</option>
+                        <option value="раздельный">Раздельный</option>
+                        <option value="2 с/у и более">2 с/у и более</option>
+                        <option value="нет">Нет</option>
+                    </select>
+                </div>
+
+
+                <!-- Internet type (select only one option out of 4) -->
+                <div class="form-group">
+                    <label for="internet_type">Internet Type:</label>
+                    <select name="internet_type" id="internet_type" required>
+                        <option value="через TV кабель">Через TV кабель</option>
+                        <option value="оптика">Оптика</option>
+                        <option value="проводной">Проводной</option>
+                        <option value="ADSL">ADSL</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" onclick="submitPropertyForm()">Submit Property</button>
+        </form>
+    </div>
+</section>
+
+<footer class="result">
+    <h2 class="center-header">Result</h2>
+    <div id="result">
+        <p>The estimated price is : {{ result }}</p>
+    </div>
+</footer>
+
+</body>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle form submission
+            $('#propertyForm').submit(function (event) {
+                // Prevent the default form submission
+                event.preventDefault();
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                // Send an AJAX request to the server
+                $.ajax({
+                    type: 'POST',
+                    url: '/process_property_form',
+                    data: formData,
+                    success: function (response) {
+                        // Update the result on the page
+                        $('#result').text('The calculated result is: ' + response.result);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
